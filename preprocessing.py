@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-if __name__ == "__main__":
+def EliminateMissingValues():
     df = pd.read_csv("diabetic_data.csv")
     records = len(df)
     drops = []
@@ -89,3 +89,25 @@ if __name__ == "__main__":
 
     df.drop(drops, inplace=True)
     df.to_csv("diabetic_data_without_missing_values.csv")
+
+
+def normalize(feature):
+    records = len(feature)
+
+    mean = 0
+    for value in feature:
+        mean += value
+    mean /= records
+
+    variance = 0
+    for value in feature:
+        variance += pow(value - mean, 2)
+    variance /= records - 1
+    standard_deviation = pow(variance, 0.5)
+
+    result = []
+    for value in feature:
+        value -= mean
+        value /= standard_deviation
+        result.append(value)
+    return result
