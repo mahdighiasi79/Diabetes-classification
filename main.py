@@ -6,7 +6,7 @@ import preprocessing
 if __name__ == "__main__":
     df = pd.read_csv("diabetic_data_without_missing_values.csv")
     records = len(df)
-    feature1 = df["num_procedures"]
+    feature1 = df["weight"]
     feature2 = df["num_medications"]
     labels = df["readmitted"]
     feature1 = preprocessing.normalize(feature1)

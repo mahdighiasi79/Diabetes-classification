@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 
 
 def EliminateMissingValues():
@@ -111,3 +112,38 @@ def normalize(feature):
         value /= standard_deviation
         result.append(value)
     return result
+
+
+def Entropy(feature):
+    records = len(feature)
+    values = {}
+
+    for value in feature:
+        if values.get(value) is None:
+            values[value] = 1
+        else:
+            values[value] += 1
+
+    entropy = 0
+    for key in values.keys():
+        probability = values[key] / records
+        entropy += probability * math.log2(probability)
+    entropy *= -1
+
+
+def MutualInformation(feature1, feature2):
+    records = len(feature1)
+    values1 = {}
+    values2 = {}
+
+    for value in feature1:
+        if values1.get(value) is None:
+            values1[value] = 1
+        else:
+            values1[value] += 1
+
+    for value in feature2:
+        if values2.get(value) is None:
+            values2[value] = 1
+        else:
+            values2[value] += 1
