@@ -1,9 +1,16 @@
 import pandas as pd
+import helper_functions as hf
 
 
 selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "time_in_hospital", "medical_specialty",
                      "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency", "number_inpatient", "diag_1", "diag_2",
                      "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
+
+selected_features_categorical = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty", "diag_1",
+                                 "diag_2", "diag_3", "tolbutamide", "insulin", "change", "diabetesMed"]
+
+selected_features_numerical = ["time_in_hospital", "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency",
+                               "number_inpatient", "number_diagnoses"]
 
 
 def EliminateMissingValues():
@@ -104,6 +111,21 @@ def FeatureSelection():
     df.to_csv("selected_features.csv")
 
 
-def EliminateOutliersCategorical(feature):
-    records = len(feature)
+def EliminateOutliers():
+    outliers = []
+    df = pd.read_csv("selected_features.csv")
 
+    for feature in selected_features_categorical:
+        noises = hf.DetectOutliersCategorical(df[feature])
+        outliers = list(set(outliers) | set(noises))
+
+    for feature in selected_features_numerical:
+        answers = hf.DetectOutliersNumerical(df[feature])
+        noises = []
+        for i in range(len(answers)):
+            if answers[i]:
+                noises.append(i)
+        outliers = list(set(outliers) | set(noises))
+
+    df.drop(outliers, axis=0, inplace=True)
+    df.to_csv("preprocessed_data.csv")

@@ -1,6 +1,8 @@
 import math
 import numpy as np
 
+outlier_threshold = 0.005
+
 
 def MeanVariance(feature):
     records = len(feature)
@@ -87,7 +89,7 @@ def DetectOutliersCategorical(feature):
 
     noise_categories = []
     for key in categories.keys():
-        if categories[key] < (records * 0.005):
+        if categories[key] < (records * outlier_threshold):
             noise_categories.append(key)
 
     result = []
@@ -101,5 +103,5 @@ def DetectOutliersNumerical(feature):
     feature_np = np.array(feature)
     mean, variance = MeanVariance(feature_np)
     probabilities = (1 / math.pow(2 * math.pi * variance, 0.5)) * np.exp(-np.power(feature_np - mean, 2) / (2 * variance))
-    outliers = (probabilities < 0.005)
+    outliers = (probabilities < outlier_threshold)
     return outliers
