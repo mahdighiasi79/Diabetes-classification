@@ -3,7 +3,7 @@ import pandas as pd
 
 selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "time_in_hospital", "medical_specialty",
                      "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency", "number_inpatient", "diag_1", "diag_2",
-                     "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed"]
+                     "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
 
 
 def EliminateMissingValues():
@@ -94,3 +94,11 @@ def EliminateMissingValues():
 
     df.drop(drops, inplace=True)
     df.to_csv("diabetic_data_without_missing_values.csv")
+
+
+def FeatureSelection():
+    df = pd.read_csv("diabetic_data_without_missing_values.csv")
+    for column in df.columns:
+        if column not in selected_features:
+            df.drop(column, axis=1, inplace=True)
+    df.to_csv("selected_features.csv")

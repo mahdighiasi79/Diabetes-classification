@@ -1,12 +1,13 @@
 import pandas as pd
 # import matplotlib.pyplot as plt
-# import preprocessing as prep
+import preprocessing as prep
 # import numpy as np
-import helper_functions as hf
-import pickle
+# import helper_functions as hf
+# import pickle
 
 if __name__ == "__main__":
-    df = pd.read_csv("diabetic_data_without_missing_values.csv")
+    df = pd.read_csv("selected_features.csv")
+    print(df.columns)
     # records = len(df)
     # feature1 = df["weight"]
     # feature2 = df["num_medications"]
@@ -76,13 +77,13 @@ if __name__ == "__main__":
     # sorted_mi = sorted(mi.items(), key=lambda x: x[1])
     # print(sorted_mi)
 
-    values = {}
-    for value in df["num_medications"]:
-        if values.get(value) is None:
-            values[value] = 1
-        else:
-            values[value] += 1
-    print(values)
-    print(len(values.keys()))
+    # values = {}
+    # for value in df["num_lab_procedures"]:
+    #     if values.get(value) is None:
+    #         values[value] = 1
+    #     else:
+    #         values[value] += 1
+    # print(values)
+    # print(len(values.keys()))
 
-    print(hf.MutualInformation(df["num_lab_procedures"], df["readmitted"]))
+    # print(hf.MutualInformation(df["num_lab_procedures"], df["readmitted"]))
