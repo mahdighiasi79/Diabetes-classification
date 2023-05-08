@@ -70,6 +70,19 @@ if __name__ == "__main__":
     #       "diabetesMed": hf.MutualInformation(df["diabetesMed"], labels)}
     # with open("mutual_information.pkl", "wb") as file:
     #     pickle.dump(mi, file)
-    with open("mutual_information.pkl", "rb") as file:
-          mi = pickle.load(file)
-    print(mi)
+    # with open("mutual_information.pkl", "rb") as file:
+    #     mi = pickle.load(file)
+    #
+    # sorted_mi = sorted(mi.items(), key=lambda x: x[1])
+    # print(sorted_mi)
+
+    values = {}
+    for value in df["num_medications"]:
+        if values.get(value) is None:
+            values[value] = 1
+        else:
+            values[value] += 1
+    print(values)
+    print(len(values.keys()))
+
+    print(hf.MutualInformation(df["num_lab_procedures"], df["readmitted"]))

@@ -1,6 +1,11 @@
 import pandas as pd
 
 
+selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "time_in_hospital", "medical_specialty",
+                     "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency", "number_inpatient", "diag_1", "diag_2",
+                     "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed"]
+
+
 def EliminateMissingValues():
     df = pd.read_csv("diabetic_data.csv")
     records = len(df)
