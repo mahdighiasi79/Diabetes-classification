@@ -3,4 +3,6 @@ import preprocessing as pre
 
 
 if __name__ == "__main__":
-    pre.EliminateOutliers()
+    df = pd.read_csv("preprocessed_data.csv")
+    print(df.columns)
+    print(len(df))
