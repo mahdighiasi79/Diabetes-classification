@@ -2,12 +2,17 @@ import math
 import numpy as np
 
 
-def Normalize(feature):
+def MeanVariance(feature):
     records = len(feature)
-    feature_np = np.array(feature)
-    mean = np.sum(feature_np, axis=0) / records
-    variance = np.power(feature_np - mean, 2)
+    mean = np.sum(feature, axis=0) / records
+    variance = np.power(feature - mean, 2)
     variance = np.sum(variance, axis=0) / (records - 1)
+    return {mean, variance}
+
+
+def Normalize(feature):
+    feature_np = np.array(feature)
+    mean, variance = MeanVariance(feature_np)
     standard_deviation = pow(variance, 0.5)
     normalized_feature = (feature_np - mean) / standard_deviation
     return normalized_feature
@@ -68,3 +73,33 @@ def MutualInformation(feature1, feature2):
 
     mutual_information = Entropy(feature1) + Entropy(feature2) - joint_entropy
     return mutual_information
+
+
+def DetectOutliersCategorical(feature):
+    records = len(feature)
+
+    categories = {}
+    for category in feature:
+        if categories.get(category) is None:
+            categories[category] = 1
+        else:
+            categories[category] += 1
+
+    noise_categories = []
+    for key in categories.keys():
+        if categories[key] < (records * 0.005):
+            noise_categories.append(key)
+
+    result = []
+    for i in range(records):
+        if feature[i] in noise_categories:
+            result.append(i)
+    return result
+
+
+def DetectOutliersNumerical(feature):
+    feature_np = np.array(feature)
+    mean, variance = MeanVariance(feature_np)
+    probabilities = (1 / math.pow(2 * math.pi * variance, 0.5)) * np.exp(-np.power(feature_np - mean, 2) / (2 * variance))
+    outliers = (probabilities < 0.005)
+    return outliers

@@ -102,3 +102,8 @@ def FeatureSelection():
         if column not in selected_features:
             df.drop(column, axis=1, inplace=True)
     df.to_csv("selected_features.csv")
+
+
+def EliminateOutliersCategorical(feature):
+    records = len(feature)
+
