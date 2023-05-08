@@ -1,11 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import preprocessing
-import numpy as np
-
+# import matplotlib.pyplot as plt
+# import preprocessing as prep
+# import numpy as np
+import helper_functions as hf
+import pickle
 
 if __name__ == "__main__":
-    # df = pd.read_csv("diabetic_data_without_missing_values.csv")
+    df = pd.read_csv("diabetic_data_without_missing_values.csv")
     # records = len(df)
     # feature1 = df["weight"]
     # feature2 = df["num_medications"]
@@ -39,15 +40,36 @@ if __name__ == "__main__":
     #
     # plt.show()
 
-    # values = {}
     # labels = df["readmitted"]
-    # for value in labels:
-    #     if values.get(value) is None:
-    #         values[value] = 1
-    #     else:
-    #         values[value] += 1
-    # print(values)
-
-    arr = [1, 2, 3]
-    index = arr.index(3)
-    print(index)
+    # mi = {"race": hf.MutualInformation(df["race"], labels),
+    #       "gender": hf.MutualInformation(df["gender"], labels),
+    #       "admission_type_id": hf.MutualInformation(df["admission_type_id"], labels),
+    #       "discharge_disposition_id": hf.MutualInformation(df["discharge_disposition_id"], labels),
+    #       "admission_source_id": hf.MutualInformation(df["admission_source_id"], labels),
+    #       "medical_specialty": hf.MutualInformation(df["medical_specialty"], labels),
+    #       "diag_1": hf.MutualInformation(df["diag_1"], labels),
+    #       "diag_2": hf.MutualInformation(df["diag_2"], labels),
+    #       "diag_3": hf.MutualInformation(df["diag_3"], labels),
+    #       "max_glu_serum": hf.MutualInformation(df["max_glu_serum"], labels),
+    #       "A1Cresult": hf.MutualInformation(df["A1Cresult"], labels),
+    #       "metformin": hf.MutualInformation(df["metformin"], labels),
+    #       "repaglinide": hf.MutualInformation(df["repaglinide"], labels),
+    #       "nateglinide": hf.MutualInformation(df["nateglinide"], labels),
+    #       "chlorpropamide": hf.MutualInformation(df["chlorpropamide"], labels),
+    #       "glimepiride": hf.MutualInformation(df["glimepiride"], labels),
+    #       "glipizide": hf.MutualInformation(df["glipizide"], labels),
+    #       "glyburide": hf.MutualInformation(df["tolbutamide"], labels),
+    #       "pioglitazone": hf.MutualInformation(df["pioglitazone"], labels),
+    #       "rosiglitazone": hf.MutualInformation(df["rosiglitazone"], labels),
+    #       "acarbose": hf.MutualInformation(df["acarbose"], labels),
+    #       "miglitol": hf.MutualInformation(df["miglitol"], labels),
+    #       "tolazamide": hf.MutualInformation(df["tolazamide"], labels),
+    #       "insulin": hf.MutualInformation(df["insulin"], labels),
+    #       "glyburide-metformin": hf.MutualInformation(df["glyburide-metformin"], labels),
+    #       "change": hf.MutualInformation(df["change"], labels),
+    #       "diabetesMed": hf.MutualInformation(df["diabetesMed"], labels)}
+    # with open("mutual_information.pkl", "wb") as file:
+    #     pickle.dump(mi, file)
+    with open("mutual_information.pkl", "rb") as file:
+          mi = pickle.load(file)
+    print(mi)
