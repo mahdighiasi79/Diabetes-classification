@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-outlier_threshold = 0.005
+outlier_threshold = 0.0001
 
 
 def MeanVariance(feature):
