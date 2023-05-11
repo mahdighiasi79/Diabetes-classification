@@ -1,3 +1,5 @@
+import pickle
+import numpy as np
 import pandas as pd
 import helper_functions as hf
 
@@ -129,3 +131,44 @@ def EliminateOutliers():
 
     df.drop(outliers, axis=0, inplace=True)
     df.to_csv("preprocessed_data.csv")
+
+
+def PrepareANNInput():
+    df = pd.read_csv("preprocessed_data.csv")
+    data = [df["time_in_hospital"], df["num_lab_procedures"], df["num_medications"], df["number_outpatient"], df["number_emergency"],
+            df["number_inpatient"], df["number_diagnoses"]]
+    rows = len(data)
+    columns = len(data[0])
+
+    ann_input = []
+    for i in range(rows):
+        row = []
+        for j in range(columns):
+            row.append(int(data[i][j]))
+        ann_input.append(row)
+    ann_input = np.array(ann_input)
+
+    for i in range(len(ann_input)):
+        ann_input[i] = hf.Normalize(ann_input[i])
+    ann_input = np.transpose(ann_input)
+
+    with open("ann_input.pkl", "wb") as file:
+        pickle.dump(ann_input, file)
+        file.close()
+
+
+def PrepareANNLabels():
+    df = pd.read_csv("preprocessed_data.csv")
+    readmitted = df["readmitted"]
+    labels = []
+    for i in range(len(readmitted)):
+        if readmitted[i] == "NO":
+            labels.append([1, 0, 0])
+        elif readmitted[i] == ">30":
+            labels.append([0, 1, 0])
+        elif readmitted[i] == "<30":
+            labels.append([0, 0, 1])
+
+    with open("ann_labels.pkl", "wb") as file:
+        pickle.dump(labels, file)
+        file.close()
