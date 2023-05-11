@@ -147,10 +147,10 @@ def PrepareANNInput():
             row.append(int(data[i][j]))
         ann_input.append(row)
     ann_input = np.array(ann_input)
+    ann_input = np.transpose(ann_input)
 
     for i in range(len(ann_input)):
         ann_input[i] = hf.Normalize(ann_input[i])
-    ann_input = np.transpose(ann_input)
 
     with open("ann_input.pkl", "wb") as file:
         pickle.dump(ann_input, file)

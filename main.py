@@ -1,6 +1,8 @@
 import preprocessing as pre
+import torch
 
 
 if __name__ == "__main__":
-    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    print(arr[:4])
+    t = torch.tensor([34, 56, 123])
+    t = torch.softmax(t, dim=0)
+    print(t)

@@ -19,7 +19,7 @@ class NeuralNetwork(nn.Module):
         self.l2 = nn.Linear(hidden_layer, hidden_layer)
         self.activation2 = nn.ReLU()
         self.l3 = nn.Linear(hidden_layer, output_layer)
-        self.activation3 = nn.Softmax()
+        self.activation3 = nn.Softmax(dim=0)
 
     def forward(self, x):
         out = self.l1(x)
@@ -44,16 +44,18 @@ if __name__ == "__main__":
 
     input_data = torch.tensor(input_data, dtype=torch.float32)
     labels = torch.tensor(labels, dtype=torch.float32)
-
-    model = NeuralNetwork(input_size, hidden_size, num_classes)
-
-    criteria = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    print(input_data.shape)
+    print(labels.shape)
 
     train_set = input_data[:50000]
     train_labels = labels[:50000]
     records = len(train_labels)
     num_batches = math.floor(records / batch_size)
+
+    model = NeuralNetwork(input_size, hidden_size, num_classes)
+
+    criteria = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     for epoch in range(num_epochs):
         for i in range(num_batches):
@@ -63,6 +65,7 @@ if __name__ == "__main__":
             label_batch = label_batch.to(device)
 
             outputs = model(input_batch)
+            print(outputs.shape)
             loss = criteria(outputs, label_batch)
 
             optimizer.zero_grad()
