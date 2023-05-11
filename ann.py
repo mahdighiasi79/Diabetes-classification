@@ -19,7 +19,7 @@ class NeuralNetwork(nn.Module):
         self.l2 = nn.Linear(hidden_layer, hidden_layer)
         self.activation2 = nn.ReLU()
         self.l3 = nn.Linear(hidden_layer, output_layer)
-        self.activation3 = nn.Softmax(dim=0)
+        self.activation3 = nn.Softmax(dim=1)
 
     def forward(self, x):
         out = self.l1(x)
