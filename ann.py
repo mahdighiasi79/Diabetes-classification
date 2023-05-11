@@ -44,8 +44,6 @@ if __name__ == "__main__":
 
     input_data = torch.tensor(input_data, dtype=torch.float32)
     labels = torch.tensor(labels, dtype=torch.float32)
-    print(input_data.shape)
-    print(labels.shape)
 
     train_set = input_data[:50000]
     train_labels = labels[:50000]
@@ -65,7 +63,6 @@ if __name__ == "__main__":
             label_batch = label_batch.to(device)
 
             outputs = model(input_batch)
-            print(outputs.shape)
             loss = criteria(outputs, label_batch)
 
             optimizer.zero_grad()
