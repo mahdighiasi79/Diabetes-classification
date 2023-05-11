@@ -2,4 +2,5 @@ import preprocessing as pre
 
 
 if __name__ == "__main__":
-    pre.PrepareANNLabels()
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    print(arr[:4])
