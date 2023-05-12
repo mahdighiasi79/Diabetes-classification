@@ -157,7 +157,7 @@ def PrepareANNInput():
         file.close()
 
 
-def PrepareANNLabels():
+def PrepareLabels():
     df = pd.read_csv("preprocessed_data.csv")
     readmitted = df["readmitted"]
     labels = []
@@ -169,6 +169,6 @@ def PrepareANNLabels():
         else:
             labels.append([0, 0, 1])
 
-    with open("ann_labels.pkl", "wb") as file:
+    with open("labels.pkl", "wb") as file:
         pickle.dump(labels, file)
         file.close()

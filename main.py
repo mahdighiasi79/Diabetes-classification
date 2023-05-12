@@ -1,5 +1,6 @@
 import pandas as pd
 import preprocessing as pre
+import numpy as np
 
 
 def ExtractValues(attribute):
@@ -15,5 +16,6 @@ def ExtractValues(attribute):
 
 
 if __name__ == "__main__":
-    pre.PrepareANNInput()
-    pre.PrepareANNLabels()
+    arr = np.array([1, 2, 4])
+    arr += [3]
+    print(arr)

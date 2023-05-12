@@ -51,7 +51,7 @@ if __name__ == "__main__":
         input_data = pickle.load(file)
         file.close()
 
-    with open("ann_labels.pkl", "rb") as file:
+    with open("labels.pkl", "rb") as file:
         labels = pickle.load(file)
         file.close()
 
