@@ -6,9 +6,9 @@ import torch.nn as nn
 input_size = 7
 hidden_size = 21
 num_classes = 3
-num_epochs = 10
-batch_size = 1000
-learning_rate = 0.001
+num_epochs = 100
+batch_size = 10000
+learning_rate = 0.01
 
 
 class NeuralNetwork(nn.Module):
@@ -29,6 +29,19 @@ class NeuralNetwork(nn.Module):
         out = self.l3(out)
         out = self.activation3(out)
         return out
+
+
+def Prediction(output):
+    prediction = []
+    for i in range(len(output)):
+        c = torch.argmax(output[i])
+        if c == 0:
+            prediction.append([1, 0, 0])
+        elif c == 1:
+            prediction.append([0, 1, 0])
+        else:
+            prediction.append([0, 0, 1])
+    return prediction
 
 
 if __name__ == "__main__":
@@ -68,3 +81,15 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+    test_set = input_data[50001:90000]
+    test_labels = labels[50001:90000]
+    predictions = Prediction(model(test_set))
+    predictions = torch.tensor(predictions, dtype=torch.float32)
+    true_predictions = 0
+    for i in range(len(test_labels)):
+        if torch.equal(test_labels[i], predictions[i]):
+            true_predictions += 1
+    accuracy = (true_predictions / len(test_labels)) * 100
+    print(true_predictions)
+    print(accuracy)

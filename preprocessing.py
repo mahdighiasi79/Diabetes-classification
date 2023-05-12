@@ -166,7 +166,7 @@ def PrepareANNLabels():
             labels.append([1, 0, 0])
         elif readmitted[i] == ">30":
             labels.append([0, 1, 0])
-        elif readmitted[i] == "<30":
+        else:
             labels.append([0, 0, 1])
 
     with open("ann_labels.pkl", "wb") as file:
