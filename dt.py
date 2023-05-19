@@ -2,6 +2,7 @@ import copy
 import numpy as np
 import pandas as pd
 import pickle
+import preprocessing as pre
 
 
 df = pd.read_csv("preprocessed_data.csv")
@@ -35,7 +36,7 @@ class Node:
 
 def ConvertLabels(node):
     labels = []
-    with open("labels.pkl", "rb") as file:
+    with open("dt_labels.pkl", "rb") as file:
         readmitted = pickle.load(file)
         file.close()
     for record in node.records:
@@ -46,14 +47,12 @@ def ConvertLabels(node):
 def GINI(node):
     records = len(node.records)
     labels = ConvertLabels(node)
-    class_1 = (labels == [1, 0, 0])
-    class_2 = (labels == [0, 1, 0])
-    class_3 = (labels == [0, 0, 1])
+    class_1 = (labels == 0)
+    class_2 = (labels == 1)
+    class_3 = (labels == 2)
     class_2 += class_3
-    p1 = np.sum(class_1, axis=1, keepdims=False)
-    p2 = np.sum(class_2, axis=1, keepdims=False)
-    p1 = np.sum(p1, axis=0, keepdims=False) / 3
-    p2 = np.sum(p2, axis=0, keepdims=False) / 3
+    p1 = np.sum(class_1, axis=0, keepdims=False)
+    p2 = np.sum(class_2, axis=0, keepdims=False)
     p1 /= records
     p2 /= records
     gini = 1 - (pow(p1, 2) + pow(p2, 2))
@@ -92,33 +91,39 @@ def Split(parent, attribute):
     return parent.children
 
 
+def LeafNode(node):
+    labels = ConvertLabels(node)
+    class_1 = (labels == 0)
+    class_2 = (labels == 1)
+    class_3 = (labels == 2)
+    class_2 += class_3
+    s1 = np.sum(class_1, axis=0, keepdims=False) / 3
+    s2 = np.sum(class_2, axis=0, keepdims=False) / 3
+    if s1 > s2:
+        node.label = 0
+    else:
+        node.label = 1
+    node.children = None
+    node.attribute = None
+    node.available_attributes = None
+
+
 def BuildTree(root, depth):
     if depth >= depth_threshold or len(root.available_attributes) == 0:
-        labels = ConvertLabels(root)
-        class_1 = (labels == [1, 0, 0])
-        class_2 = (labels == [0, 1, 0])
-        class_3 = (labels == [0, 0, 1])
-        class_2 += class_3
-        s1 = np.sum(class_1, axis=1, keepdims=False)
-        s2 = np.sum(class_2, axis=1, keepdims=False)
-        s1 = np.sum(s1, axis=0, keepdims=False) / 3
-        s2 = np.sum(s2, axis=0, keepdims=False) / 3
-        if s1 > s2:
-            root.label = 0
-        else:
-            root.label = 1
-        root.children = None
-        root.attribute = None
+        LeafNode(root)
         return
 
-    attributes = root.available_attributes
     biggest_gini = -np.inf
     attribute_to_extend = ""
-    for attribute in attributes:
+    for attribute in root.available_attributes:
         gini_split = GINI_split(Split(root, attribute))
         if gini_split > biggest_gini:
             biggest_gini = gini_split
             attribute_to_extend = attribute
+
+    if attribute_to_extend == "":
+        LeafNode(root)
+        return
 
     children = Split(root, attribute_to_extend)
     for child in children:
@@ -138,4 +143,12 @@ def RunDT(root, record_id):
 
 
 if __name__ == "__main__":
-    print("hello")
+    items = []
+    for j in range(len(df)):
+        items.append(j)
+    initial_node = Node(items, None, pre.selected_features_categorical)
+    BuildTree(initial_node, 0)
+
+    with open("decision_tree.pkl", "wb") as file2:
+        pickle.dump(initial_node, file2)
+        file2.close()

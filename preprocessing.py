@@ -172,3 +172,21 @@ def PrepareLabels():
     with open("labels.pkl", "wb") as file:
         pickle.dump(labels, file)
         file.close()
+
+
+def PrepareDTLabels():
+    with open("labels.pkl", "rb") as file:
+        labels = pickle.load(file)
+        file.close()
+    converted_labels = []
+    for label in labels:
+        if label == [1, 0, 0]:
+            converted_labels.append(0)
+        elif label == [0, 1, 0]:
+            converted_labels.append(1)
+        else:
+            converted_labels.append(2)
+    print(converted_labels)
+    with open("dt_labels.pkl", "wb") as file:
+        pickle.dump(converted_labels, file)
+        file.close()

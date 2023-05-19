@@ -1,8 +1,8 @@
+import numpy as np
 import pandas as pd
+import preprocessing as pre
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("preprocessed_data.csv")
-    row = df.iloc(0)[1]
-    print(row)
-    print(row["diag_1"])
+    if np.log2(0) == -np.inf:
+        print("hello")
