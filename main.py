@@ -1,10 +1,8 @@
-import helper_functions as hf
-
-temp = ["250", "401", "272", "585", "403", "536", "278", "276", "305", "V10", "198", "414", "250.6"]
+import pandas as pd
 
 
 if __name__ == "__main__":
-    dic = ["m", "n", "b"]
-    dic2 = dic.remove("m")
-    print(dic)
-    print(dic2)
+    df = pd.read_csv("preprocessed_data.csv")
+    row = df.iloc(0)[1]
+    print(row)
+    print(row["diag_1"])

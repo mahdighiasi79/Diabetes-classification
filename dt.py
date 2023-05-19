@@ -125,5 +125,17 @@ def BuildTree(root, depth):
         BuildTree(child, depth + 1)
 
 
+def RunDT(root, record_id):
+    if root.attribute is None:
+        return root.label
+
+    row = df.iloc(0)[record_id]
+    feature = row[root.attribute]
+    sets = feature_sets[root.attribute]
+    for i in range(len(sets)):
+        if feature in sets[i]:
+            RunDT(root.children[i], record_id)
+
+
 if __name__ == "__main__":
     print("hello")
