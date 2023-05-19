@@ -1,21 +1,13 @@
-import pandas as pd
-import preprocessing as pre
-import numpy as np
+import helper_functions as hf
 
-
-def ExtractValues(attribute):
-    df = pd.read_csv("diabetic_data.csv")
-    feature = df[attribute]
-    values = {}
-    for value in feature:
-        if values.get(value) is None:
-            values[value] = 1
-        else:
-            values[value] += 1
-    return values
+temp = ["250", "401", "272", "585", "403", "536", "278", "276", "305", "V10", "198", "414", "250.6"]
 
 
 if __name__ == "__main__":
-    arr = np.array([1, 2, 4])
-    arr += [3]
-    print(arr)
+    diag2 = hf.ExtractValues("diag_3")
+    values = []
+    for key in diag2.keys():
+        if key not in temp:
+            values.append(key)
+    print(values)
+    # hf.InformativeValues("diag_3")

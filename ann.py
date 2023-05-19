@@ -77,6 +77,7 @@ if __name__ == "__main__":
 
             outputs = model(input_batch)
             loss = criteria(outputs, label_batch)
+            print(loss)
 
             optimizer.zero_grad()
             loss.backward()

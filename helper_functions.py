@@ -1,7 +1,61 @@
 import math
 import numpy as np
+import pandas as pd
 
 outlier_threshold = 0.0001
+
+
+def ExtractValues(attribute):
+    df = pd.read_csv("preprocessed_data.csv")
+    feature = df[attribute]
+    values = {}
+    for value in feature:
+        if values.get(value) is None:
+            values[value] = 1
+        else:
+            values[value] += 1
+    return values
+
+
+def InformativeValues(attribute):
+    df = pd.read_csv("preprocessed_data.csv")
+    records = len(df)
+    diag_1 = np.array(df[attribute])
+    labels = np.array(df["readmitted"])
+    l1 = (labels == ">30")
+    l2 = (labels == "<30")
+    l = l1 + l2
+
+    values = ExtractValues(attribute)
+    informative_values = {}
+    for key in values.keys():
+        value = (diag_1 == key)
+        n_276 = np.sum(value, axis=0, keepdims=False)
+        p = value * l
+        p = np.sum(p, axis=0, keepdims=False)
+        p /= n_276
+        p *= 100
+        informative_values[key] = p
+    print(values)
+    print(informative_values)
+
+    information = {}
+    for value in informative_values.keys():
+        informativeness = (values[value] / records) * 100 * pow(abs(informative_values[value] - 50), 2)
+        information[value] = informativeness
+        print(value, informativeness)
+    sorted_informativeness = sorted(information.values())
+    print(sorted_informativeness)
+
+    while True:
+        query = input()
+        if query == "informativeness":
+            print(informative_values[input()])
+        elif query == "value":
+            i = int(input())
+            for key in information.keys():
+                if math.floor(information[key]) == i:
+                    print(key)
 
 
 def MeanVariance(feature):
