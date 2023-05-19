@@ -4,10 +4,7 @@ temp = ["250", "401", "272", "585", "403", "536", "278", "276", "305", "V10", "1
 
 
 if __name__ == "__main__":
-    diag2 = hf.ExtractValues("diag_3")
-    values = []
-    for key in diag2.keys():
-        if key not in temp:
-            values.append(key)
-    print(values)
-    # hf.InformativeValues("diag_3")
+    dic = ["m", "n", "b"]
+    dic2 = dic.remove("m")
+    print(dic)
+    print(dic2)
