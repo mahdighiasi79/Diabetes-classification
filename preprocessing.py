@@ -4,15 +4,8 @@ import pandas as pd
 import helper_functions as hf
 
 
-selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "time_in_hospital", "medical_specialty",
-                     "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency", "number_inpatient", "diag_1", "diag_2",
-                     "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
-
-selected_features_categorical = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty", "diag_1",
-                                 "diag_2", "diag_3", "tolbutamide", "insulin", "change", "diabetesMed"]
-
-selected_features_numerical = ["time_in_hospital", "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency",
-                               "number_inpatient", "number_diagnoses"]
+selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty", "diag_1", "diag_2",
+                     "diag_3", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
 
 
 def EliminateMissingValues():
@@ -117,76 +110,46 @@ def EliminateOutliers():
     outliers = []
     df = pd.read_csv("selected_features.csv")
 
-    for feature in selected_features_categorical:
-        noises = hf.DetectOutliersCategorical(df[feature])
-        outliers = list(set(outliers) | set(noises))
-
-    for feature in selected_features_numerical:
-        answers = hf.DetectOutliersNumerical(df[feature])
-        noises = []
-        for i in range(len(answers)):
-            if answers[i]:
-                noises.append(i)
+    for feature in selected_features:
+        noises = hf.DetectOutliers(df[feature])
         outliers = list(set(outliers) | set(noises))
 
     df.drop(outliers, axis=0, inplace=True)
     df.to_csv("preprocessed_data.csv")
 
 
-def PrepareANNInput():
-    df = pd.read_csv("preprocessed_data.csv")
-    data = [df["time_in_hospital"], df["num_lab_procedures"], df["num_medications"], df["number_outpatient"], df["number_emergency"],
-            df["number_inpatient"], df["number_diagnoses"]]
-    rows = len(data)
-    columns = len(data[0])
-
-    ann_input = []
-    for i in range(rows):
-        row = []
-        for j in range(columns):
-            row.append(int(data[i][j]))
-        ann_input.append(row)
-    ann_input = np.array(ann_input)
-    ann_input = np.transpose(ann_input)
-
-    for i in range(len(ann_input)):
-        ann_input[i] = hf.Normalize(ann_input[i])
-
-    with open("ann_input.pkl", "wb") as file:
-        pickle.dump(ann_input, file)
-        file.close()
-
-
-def PrepareLabels():
+def BinaryLabels():
     df = pd.read_csv("preprocessed_data.csv")
     readmitted = df["readmitted"]
     labels = []
-    for i in range(len(readmitted)):
-        if readmitted[i] == "NO":
-            labels.append([1, 0, 0])
-        elif readmitted[i] == ">30":
-            labels.append([0, 1, 0])
+    for element in readmitted:
+        if element == "NO":
+            labels.append(0)
         else:
-            labels.append([0, 0, 1])
-
-    with open("labels.pkl", "wb") as file:
+            labels.append(1)
+    print(labels)
+    labels = np.array(labels)
+    with open("binary_labels.pkl", "wb") as file:
         pickle.dump(labels, file)
         file.close()
+    print(len(df))
+    print(len(labels))
 
 
-def PrepareDTLabels():
-    with open("labels.pkl", "rb") as file:
-        labels = pickle.load(file)
-        file.close()
-    converted_labels = []
-    for label in labels:
-        if label == [1, 0, 0]:
-            converted_labels.append(0)
-        elif label == [0, 1, 0]:
-            converted_labels.append(1)
+def TripleLabels():
+    df = pd.read_csv("preprocessed_data.csv")
+    readmitted = df["readmitted"]
+    labels = []
+    for element in readmitted:
+        if element == "NO":
+            labels.append(0)
+        elif element == "<30":
+            labels.append(1)
         else:
-            converted_labels.append(2)
-    print(converted_labels)
-    with open("dt_labels.pkl", "wb") as file:
-        pickle.dump(converted_labels, file)
+            labels.append(2)
+    print(labels)
+    with open("triple_labels.pkl", "wb") as file:
+        pickle.dump(labels, file)
         file.close()
+    print(len(df))
+    print(len(labels))
