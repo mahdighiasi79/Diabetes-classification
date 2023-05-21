@@ -1,5 +1,4 @@
 import pickle
-import numpy as np
 import pandas as pd
 import helper_functions as hf
 
@@ -117,25 +116,7 @@ def EliminateOutliers():
     df.to_csv("preprocessed_data.csv")
 
 
-def BinaryLabels():
-    df = pd.read_csv("preprocessed_data.csv")
-    readmitted = df["readmitted"]
-    labels = []
-    for element in readmitted:
-        if element == "NO":
-            labels.append(0)
-        else:
-            labels.append(1)
-    print(labels)
-    labels = np.array(labels)
-    with open("binary_labels.pkl", "wb") as file:
-        pickle.dump(labels, file)
-        file.close()
-    print(len(df))
-    print(len(labels))
-
-
-def TripleLabels():
+def ConvertLabels():
     df = pd.read_csv("preprocessed_data.csv")
     readmitted = df["readmitted"]
     labels = []
@@ -147,7 +128,7 @@ def TripleLabels():
         else:
             labels.append(2)
     print(labels)
-    with open("triple_labels.pkl", "wb") as file:
+    with open("labels.pkl", "wb") as file:
         pickle.dump(labels, file)
         file.close()
     print(len(df))

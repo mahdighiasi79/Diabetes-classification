@@ -6,12 +6,12 @@ import pickle
 train_size = 80000
 
 
-class NaiveBayesBinary:
+class NaiveBayes:
 
     def __init__(self):
         self.df = pd.read_csv("preprocessed_data.csv")
         self.probabilities = {}
-        with open("binary_labels.pkl", "rb") as file:
+        with open("labels.pkl", "rb") as file:
             self.labels = pickle.load(file)
             file.close()
         self.labels = np.array(self.labels)
@@ -22,13 +22,17 @@ class NaiveBayesBinary:
         condition = (feature == value)
         label0 = (self.labels[:train_size] == 0)
         label1 = (self.labels[:train_size] == 1)
+        label2 = (self.labels[:train_size] == 2)
         matches0 = condition * label0
         matches1 = condition * label1
+        matches2 = condition * label2
         number0 = np.sum(matches0, axis=0, keepdims=False)
         number1 = np.sum(matches1, axis=0, keepdims=False)
+        number2 = np.sum(matches2, axis=0, keepdims=False)
         probability0 = number0 / train_size
         probability1 = number1 / train_size
-        return [probability0, probability1]
+        probability2 = number2 / train_size
+        return [probability0, probability1, probability2]
 
     def BayesianProbabilities(self):
         for attribute in self.df.columns:
@@ -42,20 +46,19 @@ class NaiveBayesBinary:
         record = self.df.iloc(0)[record_id]
         p0 = 1
         p1 = 1
+        p2 = 1
 
         for attribute in self.df.columns:
             value = record[attribute]
             p0 *= self.probabilities[attribute][value][0]
             p1 *= self.probabilities[attribute][value][1]
+            p2 *= self.probabilities[attribute][value][2]
 
-        if p0 > p1:
-            return 0
-        else:
-            return 1
+        return np.argmax(np.array([p0, p1, p2]))
 
 
 if __name__ == "__main__":
-    NB = NaiveBayesBinary()
+    NB = NaiveBayes()
     test_size = len(NB.df.iloc(0)[train_size:])
     true_predictions = 0
     for i in range(test_size):
