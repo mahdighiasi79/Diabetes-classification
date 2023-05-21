@@ -3,9 +3,8 @@ import numpy as np
 import pandas as pd
 import helper_functions as hf
 
-
-selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty", "diag_1", "diag_2",
-                     "diag_3", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
+selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty",
+                     "diag_1", "diag_2", "diag_3", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
 
 
 def EliminateMissingValues():
