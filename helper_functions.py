@@ -66,13 +66,6 @@ def MeanVariance(feature):
     return {mean, variance}
 
 
-def NormalDistribution(x, mean, variance):
-    coefficient = 1 / pow(2 * math.pi * variance, 0.5)
-    exponent = -0.5 * pow(x - mean, 2) / variance
-    result = coefficient * math.exp(exponent)
-    return result
-
-
 def Entropy(feature):
     records = len(feature)
     values = {}
@@ -130,7 +123,7 @@ def MutualInformation(feature1, feature2):
     return mutual_information
 
 
-def DetectOutliersCategorical(feature):
+def DetectOutliers(feature):
     records = len(feature)
 
     categories = {}
@@ -150,26 +143,3 @@ def DetectOutliersCategorical(feature):
         if feature[i] in noise_categories:
             result.append(i)
     return result
-
-
-def DetectOutliersNumerical(feature):
-    feature_np = np.array(feature)
-    mean, variance = MeanVariance(feature_np)
-    probabilities = (1 / math.pow(2 * math.pi * variance, 0.5)) * np.exp(-np.power(feature_np - mean, 2) / (2 * variance))
-    outliers = (probabilities < outlier_threshold)
-    return outliers
-
-
-def ConvertNumericalFeatures(feature):
-    converted_feature = []
-    for element in feature:
-        converted_feature.append(int(element))
-    return np.array(converted_feature)
-
-
-def EliminateZeros(feature, labels):
-    converted_feature = []
-    for i in range(len(feature)):
-        if labels[i]:
-            converted_feature.append(feature[i])
-    return np.array(converted_feature)

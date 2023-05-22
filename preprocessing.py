@@ -1,18 +1,9 @@
 import pickle
-
-import numpy as np
 import pandas as pd
 import helper_functions as hf
 
-selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "time_in_hospital", "medical_specialty",
-                     "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency", "number_inpatient", "diag_1", "diag_2",
-                     "diag_3", "number_diagnoses", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
-
-selected_features_categorical = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty", "diag_1",
-                                 "diag_2", "diag_3", "tolbutamide", "insulin", "change", "diabetesMed"]
-
-selected_features_numerical = ["time_in_hospital", "num_lab_procedures", "num_medications", "number_outpatient", "number_emergency",
-                               "number_inpatient", "number_diagnoses"]
+selected_features = ["admission_type_id", "discharge_disposition_id", "admission_source_id", "medical_specialty",
+                     "diag_1", "diag_2", "diag_3", "tolbutamide", "insulin", "change", "diabetesMed", "readmitted"]
 
 
 def EliminateMissingValues():
@@ -117,16 +108,8 @@ def EliminateOutliers():
     outliers = []
     df = pd.read_csv("selected_features.csv")
 
-    for feature in selected_features_categorical:
-        noises = hf.DetectOutliersCategorical(df[feature])
-        outliers = list(set(outliers) | set(noises))
-
-    for feature in selected_features_numerical:
-        answers = hf.DetectOutliersNumerical(df[feature])
-        noises = []
-        for i in range(len(answers)):
-            if answers[i]:
-                noises.append(i)
+    for feature in selected_features:
+        noises = hf.DetectOutliers(df[feature])
         outliers = list(set(outliers) | set(noises))
 
     df.drop(outliers, axis=0, inplace=True)
@@ -144,7 +127,9 @@ def ConvertLabels():
             labels.append(1)
         else:
             labels.append(2)
+    print(labels)
     with open("labels.pkl", "wb") as file:
         pickle.dump(labels, file)
         file.close()
-
+    print(len(df))
+    print(len(labels))
