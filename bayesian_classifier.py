@@ -1,9 +1,8 @@
-import math
-
 import helper_functions as hf
 import pandas as pd
 import numpy as np
 import pickle
+import math
 
 
 class NaiveBayes:
