@@ -7,7 +7,6 @@ outlier_threshold = 0.0001
 
 def ExtractValues(attribute):
     df = pd.read_csv("selected_features.csv")
-    print(len(df))
     feature = df[attribute]
     values = {}
     for value in feature:

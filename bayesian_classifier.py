@@ -100,4 +100,4 @@ if __name__ == "__main__":
     print(percentage)
 
     overall_accuracy /= (num_iterations + 1)
-    print(overall_accuracy)
+    print("average accuracy:", overall_accuracy)
